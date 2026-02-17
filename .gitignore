@@ -1,0 +1,78 @@
+# Virtual Environment
+.venv/
+venv/
+env/
+
+# Python Bytecode
+__pycache__/
+*.pyc
+
+# Environment Variables (Sensitive API Keys)
+.env
+# 1. Python Environment & Artifacts
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# 2. Secret Keys & Environment Variables (CRITICAL)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+secrets.json
+
+# 3. Vector Database & Document Data
+# Do NOT push your local vector database or raw data files to GitHub. 
+# Recruiters should ingest their own data to test your code.
+data/
+chroma/
+vector_store_data/
+*.db
+*.sqlite3
+
+# 4. Logs & Temp Files
+*.log
+pip-log.txt
+pip-delete-this-directory.txt
+.history/
+
+# 5. IDE - VS Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# 6. OS Specific Files
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+# OS Files
+.DS_Store
+Thumbs.db
+
+#Project-Specific (ChromeDB local data)
+data/
+
