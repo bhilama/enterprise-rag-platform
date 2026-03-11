@@ -2,6 +2,8 @@ import sys
 import os
 from loguru import logger
 
+
+
 # Setup Loguru
 def setup_logging():
     # Handle console and file logging.
@@ -28,6 +30,8 @@ from ingestion.chunker import DocumentChunker
 from embeddings.embedding_service import LocalEmbeddingsService
 from vector_store.chroma_store import VectorStoreManager
 from app.config import settings
+from rag.retriever import DocumentRetriever
+from rag.qa_chain import QAChainManager
 
 def run_ingestion_verification(file_path: str):
     logger.info(f"Starting verification for {os.path.basename(file_path)}.")
@@ -63,7 +67,7 @@ def run_ingestion_verification(file_path: str):
         if success:
             logger.info("Testing similarity search")
             test_query = "What is this document about?"
-            test_results = vector_manager.similarity_search(test_query, k=2)
+            test_results = vector_manager.similarity_search(test_query, k=3)
 
             if test_results:
                 logger.success(f"Search Successful. Found {len(test_results)} result contexts")
@@ -74,6 +78,26 @@ def run_ingestion_verification(file_path: str):
                 logger.warning("Search returned no results. Check embeddings and indexing.")
     except Exception as e:
         logger.exception(f"Pipeline had issue during verification: {str(e)}")
+
+    
+    # Setup retrieval and QA
+    retriever_service = DocumentRetriever(vector_manager, search_k = 3)
+    
+    qa_manager = QAChainManager(retriever_service.retriever)
+
+    # Ask a question
+    question = "Can you summarize evolution of LLM in five lines?"
+    result = qa_manager.ask(question)
+
+    logger.success("--- FINAL AI RESPONSE ---")
+    print(f"\nQUESTION: {question}")
+    print(f"ANSWER:  {result['answer']}")
+
+    print("\nSOURCES USED:")
+    for doc in result["source"]:
+        print(f" - {doc.metadata.get('filename')} (Page {doc.metadata.get('page')})")
+    
+    
 
 if __name__ == "__main__":
     setup_logging()
